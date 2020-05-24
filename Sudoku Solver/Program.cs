@@ -46,28 +46,9 @@ namespace Sudoku_Solver
                 if (done) break;
                 DrawGrid(true);
             }
-            /*
-            grid = new int[,]
-            {
-                { 0, 0, 6, 0, 1, 0, 0, 0, 2 },
-                { 4, 0, 0, 0, 8, 7, 0, 0, 0 },
-                { 0, 0, 0, 5, 0, 3, 9, 0, 0 },
-                { 8, 0, 0, 3, 0, 0, 0, 7, 9 },
-                { 0, 0, 4, 0, 9, 0, 3, 0, 0 },
-                { 2, 9, 0, 0, 0, 5, 0, 0, 1 },
-                { 0, 0, 8, 4, 0, 2, 0, 0, 0 },
-                { 0, 0, 0, 1, 7, 0, 0, 0, 4 },
-                { 6, 0, 0, 0, 3, 0, 2, 0, 0 }
-            };*/
-            int[,] solved = grid;
-            do
-            {
-                grid = solved;
-                solved = Solve(grid);
-            } while (!Matches(solved, grid)); // instead of this just make Solve() recursive
+            grid = Solve(grid);
             DrawGrid(false);
             var input = Console.ReadLine();
-
         }
         
 
@@ -93,9 +74,9 @@ namespace Sudoku_Solver
             }
             if (Entering) Console.Write("Press ENTER to solve.");
         }
-        static int[,] Solve(int[,] Grid)
+        static int[,] Solve(int[,] Input)
         {
-            Grid = (int[,])Grid.Clone();
+            var Grid = (int[,])Input.Clone();
             List<int>[,] possibleNums = new List<int>[9,9];
 
             for (int row = 0; row < 9; row++)
@@ -159,8 +140,9 @@ namespace Sudoku_Solver
                 }
             }
 
-
-            return Grid;
+            if (Matches(Grid, Input))
+                return Grid;
+            else return Solve(Grid);
         }
 
         static int[] GetRow(int[,] Grid, int row)
